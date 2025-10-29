@@ -39,6 +39,14 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  
+  
+  /* custom colors */
+  --color-custom-bg: var(--custom-bg);
+  --color-custom-card: var(--custom-card);
+  --color-custom-accent: var(--custom-accent);
+  --color-custom-accent-2: var(--custom-accent-2);
+  --color-custom-text: var(--custom-text);
 }
 
 :root {
@@ -74,6 +82,14 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  
+  /* custom colors */
+  
+  --custom-bg: oklch(0.15 0.02 250);
+  --custom-card: oklch(0.25 0.02 250);
+  --custom-accent: oklch(0.55 0.12 220);
+  --custom-accent-2: oklch(0.35 0.01 250);
+  --custom-text: oklch(0.95 0.02 250);
 }
 
 .dark {
@@ -108,6 +124,8 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  
+
 }
 
 @layer base {

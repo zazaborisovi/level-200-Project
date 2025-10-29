@@ -42,6 +42,19 @@ export const SignInUser = async(req , res) =>{
     }
 }
 
+export const GetNotes = async(req , res) =>{
+    try {
+        const User = await UserModel.findById(req.userId)
+        if(!User){
+            res.status(404).json({message: "user not found"})
+            return
+        }
+        res.status(200).json({notes: User.notes})
+    } catch (err) {
+        res.status(500).json({message:err})
+    }
+}
+
 export const AddNote = async (req , res) =>{
     const { note } = req.body
     if(!note || note.trim().length === 0){
