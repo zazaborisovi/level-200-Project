@@ -8,7 +8,11 @@ export const CreateUser = async(req , res) =>{
         const {username , password} = req.body
         const userExists = await UserModel.findOne({username})
         if (userExists){
-            res.status(400).json("User already exists")
+            res.status(400).json({message: "User already exists"})
+            return
+        }
+        if (password.length < 8){
+            res.status(400).json({message: "Password must be at least 8 characters long"})
             return
         }
         const hashPass = await bcrypt.hash(password , 10)
@@ -17,7 +21,7 @@ export const CreateUser = async(req , res) =>{
         res.cookie("token" , token, {httpOnly: true, secure: false , sameSite: 'lax'}).json({message: "token sent"})
     } catch (err) {
         console.error("error creating user" , err)
-        res.status(400).json({errord: err.message})
+        res.status(400).json({message: err.message})
     }
 }
 
@@ -62,11 +66,9 @@ export const AddNote = async (req , res) =>{
         return
     }
     try {
-      const user = await UserModel.findByIdAndUpdate(
-        req.userId,
-        {$push: { todos: note }}, // pushes the note to the users note array
-        { new: true } // updates the user document with the new note array
-      )
+      const user = await UserModel.findById(req.userId)
+      user.notes.push(note)
+      await user.save()
       return res.status(200).json({ message: "Note added successfully"})
     } catch (err) {
         res.status(500).json({message: "error " + err})
@@ -74,7 +76,16 @@ export const AddNote = async (req , res) =>{
 }
 
 export const DeleteNote = async (req , res) =>{
-  
+  const {name} = req.body
+  try{
+    const user = await UserModel.findById(req.userId)
+    const noteToDelete = user.notes.findIndex((note) => note.name == name)
+    user.notes.splice(noteToDelete , 1)
+    await user.save()
+    res.status(200).json({message: "Note Deleted Successfully"})
+  }catch(err){
+    res.status(500).json({message: "error" + err})
+  }
 }
 
 export const UpdateNote = async (req , res) =>{

@@ -1,11 +1,16 @@
+import { SignOut } from '@/functions/authFunctions/userAuthFunction'
 import {useEffect, useState} from 'react' 
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 
 export default function Main(){
   const [note , setNote] = useState()
+  const [name , setName] = useState("")
+  const [content , setContent] = useState("")
+  
   const url = "http://localhost:6969/api/getnote"
   const navigate = useNavigate()
+  
   useEffect(() =>{
     try{
       fetch("http://localhost:6969/api/check/user/auth", {credentials: 'include'})
@@ -31,29 +36,44 @@ export default function Main(){
     }
     getNote()
   },[])
-
-  const signOut = async() =>{
+  
+  const addNote = async (note: { name: string, content: string }) => {
     try {
-      const res = await fetch("http://localhost:6969/api/signout", {
+      const res = await fetch("http://localhost:6969/api/addnote", {
         method: 'POST',
-        credentials: 'include'
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(note),
+        credentials: 'include',
       })
       
       const data = await res.json()
       
       if (!res.ok) {
+        console.log(note)
+        console.log(res)
         toast.error(data.message)
+        return
       }
       
-      navigate("/signin")
-    }
-    catch(err){
+      toast.success("Note added successfully")
+    } catch (err){
       console.error(err)
     }
   }
   return (
     <div>
-      <button onClick={() => signOut()}>Logout</button>
+      <button onClick={() => SignOut(toast , navigate)}>Log Out</button>
+      
+      <form>
+        <input name="name" type="text" onChange={(e) => setName(e.target.value)} />
+        <input name="content" type="text" onChange={(e) => setContent(e.target.value)} />
+        <button onClick={(e) => {
+          e.preventDefault()
+          addNote({name: name, content: content})
+        }}>Add Note</button>
+      </form>
       {note?.map((note) => (
         <div>
           <h2>{note.name}</h2>
