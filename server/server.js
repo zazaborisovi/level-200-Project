@@ -1,9 +1,10 @@
 import express from "express"
 import dotenv from "dotenv"
-import router from "../routers/router.js"
-import connectDB from "../Database/connectDB.js"
+import router from "./routers/router.js"
+import connectDB from "./Database/connectDB.js"
 import cookieparser from "cookie-parser"
 import cors from "cors"
+import userRouter from "./routers/auth.router.js"
 
 const App = express()
 App.use(express.json())
@@ -21,6 +22,7 @@ App.get("/hello" , (req , res) =>{
 })
 
 App.use("/api" , router)
+App.use("/api" , userRouter)
 
 App.listen(PORT , () =>{
     connectDB()
