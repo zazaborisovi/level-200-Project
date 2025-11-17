@@ -2,12 +2,14 @@ import { useNavigate } from "react-router-dom"
 import { useEffect } from "react"
 import { toast } from "sonner"
 
+const APIURL = import.meta.env.VITE_API_URL
+
 export const HandleUserRedirect = () =>{
   const navigate = useNavigate()
   useEffect(() => {
     const checkAuth = async() =>{
       try{
-        const res = await fetch("http://localhost:6969/api/check/user/auth", { credentials: 'include' })
+        const res = await fetch(`${APIURL}check/user/auth`, { credentials: 'include' })
         if (res.ok){
           navigate('/')
         }
@@ -18,6 +20,7 @@ export const HandleUserRedirect = () =>{
     checkAuth()
   }, [navigate])
 }
+
 export const HandleFormSubmit = async (e: React.FormEvent, data: { username: string, password: string }, Method, navigate , url) => {
   e.preventDefault()
   try {
@@ -46,7 +49,7 @@ export const HandleFormSubmit = async (e: React.FormEvent, data: { username: str
 
 export const SignOut = async(toast , navigate) =>{
   try {
-    const res = await fetch("http://localhost:6969/api/signout", {
+    const res = await fetch(`${APIURL}/signout`, {
       method: 'POST',
       credentials: 'include'
     })
